@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For Ranara 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ffd6e8, #fff0f6);
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 38px 34px 46px;
+      border-radius: 26px;
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 22px 45px rgba(255, 77, 109, 0.28);
+      position: relative;
+      z-index: 5;
+      animation: pop 0.45s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .emoji {
+      font-size: 62px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    h2 {
+      color: #ff4d6d;
+      font-size: 22px;
+      margin-bottom: 26px;
+    }
+
+    button {
+      padding: 12px 28px;
+      font-size: 16px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #yes {
+      background: #ff4d6d;
+      color: white;
+      margin-right: 18px;
+      box-shadow: 0 8px 18px rgba(255, 77, 109, 0.45);
+      transition: transform 0.2s ease;
+    }
+
+    #yes:hover {
+      transform: scale(1.08);
+    }
+
+    #no {
+      background: #eee;
+      position: fixed;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .heart {
+      position: fixed;
+      font-size: 20px;
+      opacity: 0.75;
+      animation: floatUp 4s linear forwards;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(0); opacity: 1; }
+      to { transform: translateY(-120vh); opacity: 0; }
+    }
+
+    #message {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg,#ffd6e8,#fff0f6);
+      z-index: 10;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    @keyframes bounce {
+      0% { transform: scale(0.85); }
+      50% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="card" id="card">
+  <div class="emoji" onclick="alert('hehe 🐱💗')">🐱💖</div>
+  <h2>Ranara, will you be my Valentine?</h2>
+  <button id="yes">Yes 💘</button>
+  <button id="no">No 😔</button>
+</div>
+
+<div id="message">
+  <h1 id="yayText" style="color:#ff4d6d; font-size:42px;">
+    YAYYAAYYYY XDXDD 💖
+  </h1>
+
+  <p style="font-size:20px; max-width:340px;">
+    (as if you could say no tho 🙏)
+  </p>
+
+  <p style="
+    font-size:18px;
+    max-width:380px;
+    margin-top:18px;
+    line-height:1.5;
+    color:#444;
+  ">
+    Roses are red,<br>
+    Violets are blue,<br>
+    This little website exists,<br>
+    Because I really REALLY love you 💕
+  </p>
+</div>
+
+<script>
+  const noBtn = document.getElementById("no");
+  const yesBtn = document.getElementById("yes");
+  const card = document.getElementById("card");
+  const message = document.getElementById("message");
+
+  // Smooth reel-like runaway
+  function moveNo() {
+    const x = Math.random() * (window.innerWidth - 120);
+    const y = Math.random() * (window.innerHeight - 80);
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  }
+
+  noBtn.addEventListener("mouseenter", moveNo);
+  noBtn.addEventListener("click", moveNo);
+
+  // Make Yes slowly irresistible
+  let yesScale = 1;
+  setInterval(() => {
+    yesScale += 0.03;
+    yesBtn.style.transform = `scale(${yesScale})`;
+  }, 1600);
+
+  // Floating hearts (soft)
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.bottom = "0px";
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+  }, 900);
+
+  // Confetti
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext("2d");
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  let pieces = [];
+
+  function makeConfetti() {
+    for (let i = 0; i < 220; i++) {
+      pieces.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        s: Math.random() * 6 + 4,
+        v: Math.random() * 3 + 2,
+        c: `hsl(${Math.random()*360},100%,70%)`
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      ctx.fillStyle = p.c;
+      ctx.fillRect(p.x,p.y,p.s,p.s);
+      p.y += p.v;
+    });
+    requestAnimationFrame(draw);
+  }
+
+  yesBtn.onclick = () => {
+    card.style.display = "none";
+    message.style.display = "flex";
+    document.getElementById("yayText").style.animation = "bounce 0.6s ease";
+    makeConfetti();
+    draw();
+  };
+</script>
+
+</body>
+</html>
